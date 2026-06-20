@@ -1,7 +1,7 @@
-export type BookingType = 'train' | 'flight' | 'hotel' | 'bus';
+export type BookingType = 'train' | 'flight' | 'hotel' | 'bus' | 'metro' | 'cab';
 
-export type TrainClass = '1A' | '2A' | '3A' | 'SL' | 'CC' | '2S';
-export type TrainQuota = 'GENERAL' | 'TATKAL' | 'LADIES' | 'SR_CITIZEN';
+export type TrainClass = '1A' | '2A' | '3A' | 'SL' | 'CC' | '2S' | 'EC';
+export type TrainQuota = 'GENERAL' | 'TATKAL' | 'LADIES' | 'SR_CITIZEN' | 'DIVYAANGJAN';
 
 export interface SeatAvailability {
   classCode: TrainClass;
@@ -10,6 +10,7 @@ export interface SeatAvailability {
   seats: number;
   price: number;
   waitlistCount?: number;
+  confirmationChance?: number; // e.g. 85 for 85% probability
 }
 
 export interface Train {
@@ -58,6 +59,37 @@ export interface Hotel {
   roomsAvailable: number;
 }
 
+export interface Bus {
+  id: string;
+  operator: string;
+  type: string; // e.g. "AC Sleeper (2+1)"
+  departureTime: string;
+  arrivalTime: string;
+  duration: string;
+  price: number;
+  rating: number;
+  seatsRemaining: number;
+}
+
+export interface Metro {
+  id: string;
+  line: string; // e.g. "Delhi Metro Yellow Line"
+  colorCode: string; // e.g. "#FFC72C"
+  departureTime: string;
+  arrivalTime: string;
+  duration: string;
+  price: number;
+  frequency: string; // e.g. "Every 3 mins"
+}
+
+export interface Cab {
+  id: string;
+  provider: string; // e.g. "Uber Connect"
+  type: 'Sedan' | 'SUV' | 'Mini' | 'Auto';
+  price: number;
+  etaMinutes: number;
+}
+
 export interface Passenger {
   id: string;
   name: string;
@@ -72,10 +104,10 @@ export interface Booking {
   id: string;
   pnr: string;
   type: BookingType;
-  itemId: string; // Train ID, Flight ID, or Hotel ID
-  itemName: string; // e.g. "Rajdhani Express" or "IndiGo 6E-201"
-  itemNumber?: string; // e.g. "12423"
-  travelClass?: string; // e.g. "3A" or "Economy"
+  itemId: string; // Train ID, Flight ID, Hotel ID, Bus ID, Metro ID, Cab ID
+  itemName: string; // e.g. "Rajdhani Express"
+  itemNumber?: string;
+  travelClass?: string;
   date: string;
   from: string;
   fromCode: string;
@@ -83,7 +115,7 @@ export interface Booking {
   toCode: string;
   passengers: Passenger[];
   totalFare: number;
-  status: 'CONFIRMED' | 'PENDING' | 'CANCELLED';
+  status: 'CONFIRMED' | 'PENDING' | 'CANCELLED' | 'WAITLIST';
   paymentId?: string;
   createdAt: string;
 }
@@ -101,4 +133,20 @@ export interface SearchQuery {
   roomsCount?: number;
 }
 
-export type BookingItem = Train | Flight | Hotel;
+export interface WalletTransaction {
+  id: string;
+  amount: number;
+  type: 'DEPOSIT' | 'PAYMENT' | 'REFUND';
+  status: 'SUCCESS' | 'FAILED';
+  description: string;
+  createdAt: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  sender: 'user' | 'disha';
+  text: string;
+  timestamp: string;
+}
+
+export type BookingItem = Train | Flight | Hotel | Bus | Metro | Cab;

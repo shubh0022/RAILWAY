@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-orange-light: #ff7e47;
-  --color-brand-orange: #f55a14;
-  --color-brand-orange-dark: #cc3f00;
+  --color-brand-orange-light: #ff914d;
+  --color-brand-orange: #fb7613;
+  --color-brand-orange-dark: #d25900;
   
-  --color-brand-blue-light: #2c5282;
-  --color-brand-blue: #0f172a;
-  --color-brand-blue-dark: #020617;
+  --color-brand-blue-light: #16467a;
+  --color-brand-blue: #0b294e;
+  --color-brand-blue-dark: #071c36;
   
   --color-accent-green: #10b981;
   --color-accent-red: #ef4444;
@@ -16,11 +16,12 @@
   --color-glass-bg: rgba(255, 255, 255, 0.06);
   --color-glass-bg-hover: rgba(255, 255, 255, 0.12);
   --color-glass-border: rgba(255, 255, 255, 0.08);
-  --color-glass-dark: rgba(15, 23, 42, 0.65);
+  --color-glass-dark: rgba(11, 41, 78, 0.65);
   
   --animate-fade-in: fade-in 0.3s ease-out;
   --animate-slide-up: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-marquee: marquee 25s linear infinite;
 
   @keyframes fade-in {
     from { opacity: 0; }
@@ -29,6 +30,10 @@
   @keyframes slide-up {
     from { transform: translateY(16px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes marquee {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
   }
 }
 

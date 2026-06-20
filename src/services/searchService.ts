@@ -1,4 +1,4 @@
-import { Train, Flight, Hotel, SearchQuery, TrainClass } from '../types';
+import { Train, Flight, Hotel, Bus, Metro, Cab, SearchQuery, TrainClass, BookingItem } from '../types';
 
 // Mock Trains database
 const MOCK_TRAINS: Train[] = [
@@ -14,14 +14,15 @@ const MOCK_TRAINS: Train[] = [
     arrivalTime: '09:55',
     duration: '17h 00m',
     runsOn: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    classes: ['1A', '2A', '3A'],
+    classes: ['1A', '2A', '3A', 'SL'],
     availability: {
       '1A': { classCode: '1A', className: 'AC First Class', status: 'AVAILABLE', seats: 4, price: 4390 },
       '2A': { classCode: '2A', className: 'AC 2 Tier', status: 'AVAILABLE', seats: 12, price: 2850 },
       '3A': { classCode: '3A', className: 'AC 3 Tier', status: 'AVAILABLE', seats: 45, price: 2010 },
-      'SL': { classCode: 'SL', className: 'Sleeper', status: 'WL', seats: 0, price: 670, waitlistCount: 22 },
+      'SL': { classCode: 'SL', className: 'Sleeper', status: 'WL', seats: 0, price: 670, waitlistCount: 22, confirmationChance: 85 },
       'CC': { classCode: 'CC', className: 'AC Chair Car', status: 'AVAILABLE', seats: 0, price: 1100 },
-      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 350 }
+      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 350 },
+      'EC': { classCode: 'EC', className: 'Executive Class', status: 'AVAILABLE', seats: 0, price: 0 }
     }
   },
   {
@@ -36,14 +37,15 @@ const MOCK_TRAINS: Train[] = [
     arrivalTime: '14:40',
     duration: '08h 40m',
     runsOn: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    classes: ['CC', '1A'],
+    classes: ['CC', 'EC'],
     availability: {
-      '1A': { classCode: '1A', className: 'Executive Class', status: 'AVAILABLE', seats: 6, price: 2450 },
+      '1A': { classCode: '1A', className: 'AC First Class', status: 'AVAILABLE', seats: 0, price: 0 },
       '2A': { classCode: '2A', className: 'AC 2 Tier', status: 'AVAILABLE', seats: 0, price: 0 },
       '3A': { classCode: '3A', className: 'AC 3 Tier', status: 'AVAILABLE', seats: 0, price: 0 },
       'SL': { classCode: 'SL', className: 'Sleeper', status: 'AVAILABLE', seats: 0, price: 0 },
       'CC': { classCode: 'CC', className: 'AC Chair Car', status: 'AVAILABLE', seats: 128, price: 1250 },
-      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 }
+      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 },
+      'EC': { classCode: 'EC', className: 'Executive Chair Class', status: 'AVAILABLE', seats: 8, price: 2450 }
     }
   },
   {
@@ -58,14 +60,15 @@ const MOCK_TRAINS: Train[] = [
     arrivalTime: '08:35',
     duration: '15h 40m',
     runsOn: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    classes: ['1A', '2A', '3A'],
+    classes: ['1A', '2A', '3A', 'SL'],
     availability: {
       '1A': { classCode: '1A', className: 'AC First Class', status: 'AVAILABLE', seats: 2, price: 4730 },
       '2A': { classCode: '2A', className: 'AC 2 Tier', status: 'AVAILABLE', seats: 18, price: 2980 },
       '3A': { classCode: '3A', className: 'AC 3 Tier', status: 'AVAILABLE', seats: 60, price: 2095 },
-      'SL': { classCode: 'SL', className: 'Sleeper', status: 'AVAILABLE', seats: 0, price: 0 },
+      'SL': { classCode: 'SL', className: 'Sleeper', status: 'WL', seats: 0, price: 710, waitlistCount: 48, confirmationChance: 42 },
       'CC': { classCode: 'CC', className: 'AC Chair Car', status: 'AVAILABLE', seats: 0, price: 0 },
-      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 }
+      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 },
+      'EC': { classCode: 'EC', className: 'Executive Class', status: 'AVAILABLE', seats: 0, price: 0 }
     }
   },
   {
@@ -82,12 +85,13 @@ const MOCK_TRAINS: Train[] = [
     runsOn: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     classes: ['1A', '2A', '3A', 'SL'],
     availability: {
-      '1A': { classCode: '1A', className: 'AC First Class', status: 'WL', seats: 0, waitlistCount: 2, price: 2990 },
+      '1A': { classCode: '1A', className: 'AC First Class', status: 'WL', seats: 0, waitlistCount: 2, price: 2990, confirmationChance: 92 },
       '2A': { classCode: '2A', className: 'AC 2 Tier', status: 'AVAILABLE', seats: 5, price: 1850 },
       '3A': { classCode: '3A', className: 'AC 3 Tier', status: 'AVAILABLE', seats: 24, price: 1320 },
       'SL': { classCode: 'SL', className: 'Sleeper', status: 'AVAILABLE', seats: 95, price: 495 },
       'CC': { classCode: 'CC', className: 'AC Chair Car', status: 'AVAILABLE', seats: 0, price: 0 },
-      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 }
+      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 },
+      'EC': { classCode: 'EC', className: 'Executive Class', status: 'AVAILABLE', seats: 0, price: 0 }
     }
   },
   {
@@ -102,14 +106,15 @@ const MOCK_TRAINS: Train[] = [
     arrivalTime: '05:20',
     duration: '33h 30m',
     runsOn: ['Mon', 'Wed', 'Thu', 'Sat'],
-    classes: ['1A', '2A', '3A'],
+    classes: ['1A', '2A', '3A', 'SL'],
     availability: {
       '1A': { classCode: '1A', className: 'AC First Class', status: 'AVAILABLE', seats: 1, price: 5850 },
       '2A': { classCode: '2A', className: 'AC 2 Tier', status: 'AVAILABLE', seats: 9, price: 3820 },
       '3A': { classCode: '3A', className: 'AC 3 Tier', status: 'RAC', seats: 14, price: 2710 },
-      'SL': { classCode: 'SL', className: 'Sleeper', status: 'AVAILABLE', seats: 0, price: 0 },
+      'SL': { classCode: 'SL', className: 'Sleeper', status: 'WL', seats: 0, price: 920, waitlistCount: 35, confirmationChance: 68 },
       'CC': { classCode: 'CC', className: 'AC Chair Car', status: 'AVAILABLE', seats: 0, price: 0 },
-      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 }
+      '2S': { classCode: '2S', className: 'Second Seating', status: 'AVAILABLE', seats: 0, price: 0 },
+      'EC': { classCode: 'EC', className: 'Executive Class', status: 'AVAILABLE', seats: 0, price: 0 }
     }
   }
 ];
@@ -234,6 +239,92 @@ const MOCK_HOTELS: Hotel[] = [
   }
 ];
 
+// Mock Buses database
+const MOCK_BUSES: Bus[] = [
+  {
+    id: 'B1',
+    operator: 'Zingbus Plus',
+    type: 'A/C Sleeper (2+1)',
+    departureTime: '21:00',
+    arrivalTime: '07:30',
+    duration: '10h 30m',
+    price: 899,
+    rating: 4.6,
+    seatsRemaining: 18
+  },
+  {
+    id: 'B2',
+    operator: 'VRL Travels',
+    type: 'Multi-Axle A/C Semi-Sleeper',
+    departureTime: '22:30',
+    arrivalTime: '09:00',
+    duration: '10h 30m',
+    price: 750,
+    rating: 4.2,
+    seatsRemaining: 24
+  },
+  {
+    id: 'B3',
+    operator: 'IntrCity SmartBus',
+    type: 'A/C Sleeper (1+2)',
+    departureTime: '20:15',
+    arrivalTime: '06:45',
+    duration: '10h 30m',
+    price: 1150,
+    rating: 4.8,
+    seatsRemaining: 7
+  }
+];
+
+// Mock Metro database
+const MOCK_METROS: Metro[] = [
+  {
+    id: 'M1',
+    line: 'Delhi Metro Yellow Line (Huda City Centre ➔ Samaypur Badli)',
+    colorCode: '#FFC72C',
+    departureTime: '06:00',
+    arrivalTime: '23:00',
+    duration: '1h 25m',
+    price: 60,
+    frequency: 'Every 3 mins'
+  },
+  {
+    id: 'M2',
+    line: 'Delhi Metro Airport Express Line (New Delhi ➔ IGI Airport)',
+    colorCode: '#FF6F00',
+    departureTime: '04:45',
+    arrivalTime: '23:30',
+    duration: '19m',
+    price: 50,
+    frequency: 'Every 10 mins'
+  }
+];
+
+// Mock Cabs database
+const MOCK_CABS: Cab[] = [
+  {
+    id: 'C1',
+    provider: 'Ola Cabs',
+    type: 'Sedan',
+    price: 450,
+    etaMinutes: 4
+  },
+  {
+    id: 'C2',
+    provider: 'Uber Connect',
+    type: 'SUV',
+    price: 680,
+    etaMinutes: 6
+  },
+  {
+    id: 'C3',
+    provider: 'Rapido Bike Auto',
+    type: 'Auto',
+    price: 210,
+    etaMinutes: 2
+  }
+];
+
 // In-memory seat locks map (key: trainId-class-seat, value: timestamp when locked)
 const seatLocks = new Map<string, number>();
 const SEAT_LOCK_DURATION_MS = 10 * 60 * 1000; // 10 minutes
@@ -246,18 +337,15 @@ export const searchService = {
   },
 
   searchTrains: async (query: SearchQuery): Promise<Train[]> => {
-    // Filter logic
     const results = MOCK_TRAINS.filter(train => {
       const matchFrom = !query.fromCode || train.fromCode.toLowerCase() === query.fromCode.toLowerCase();
       const matchTo = !query.toCode || train.toCode.toLowerCase() === query.toCode.toLowerCase();
       return matchFrom && matchTo;
     });
 
-    // Fallback/General availability if search codes don't match exactly
     if (results.length === 0) {
       return searchService.delay(MOCK_TRAINS);
     }
-    
     return searchService.delay(results);
   },
 
@@ -271,7 +359,6 @@ export const searchService = {
     if (results.length === 0) {
       return searchService.delay(MOCK_FLIGHTS);
     }
-
     return searchService.delay(results);
   },
 
@@ -284,8 +371,19 @@ export const searchService = {
     if (results.length === 0) {
       return searchService.delay(MOCK_HOTELS);
     }
-
     return searchService.delay(results);
+  },
+
+  searchBuses: async (query: SearchQuery): Promise<Bus[]> => {
+    return searchService.delay(MOCK_BUSES);
+  },
+
+  searchMetros: async (query: SearchQuery): Promise<Metro[]> => {
+    return searchService.delay(MOCK_METROS);
+  },
+
+  searchCabs: async (query: SearchQuery): Promise<Cab[]> => {
+    return searchService.delay(MOCK_CABS);
   },
 
   // Redis-style lock simulator
@@ -321,7 +419,6 @@ export const searchService = {
 
   getActiveLocks: () => {
     const now = Date.now();
-    // Clean up expired
     for (const [key, timestamp] of seatLocks.entries()) {
       if (now - timestamp > SEAT_LOCK_DURATION_MS) {
         seatLocks.delete(key);
